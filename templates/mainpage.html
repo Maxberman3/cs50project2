@@ -1,0 +1,41 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}
+Crack Messaging
+{% endblock %}
+{% block content %}
+{% with messages = get_flashed_messages() %}
+   {% if messages %}
+      {% for message in messages %}
+         <h3 style=color:blue;>{{ message }}!</h3>
+      {% endfor %}
+   {% endif %}
+{% endwith %}
+<div class="fluid container">
+  <div class="row">
+    <div class="col">
+    <h1 align="center"> Welcome {{displayname}} to Crack Messaging</h1></br>
+    <p align="center" class="lead"> Slack's addictive little brother</p>
+    <hr>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-6">
+    <div class="center-block">
+    <h2> Available Channels </h2>
+    <p class="lead"> click to enter</p>
+  </div>
+    <div class="list-group">
+      {% for id, channel in channels.items() %}
+      <a href="channel/{{id}}" class="list-group-item list-group-item-action active">{{channel.name}}/#{{id}}</a>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="center-block">
+    <h2> Create New Channel</h2></br>
+    <a class="btn btn-primary" href="{{url_for('newchannel')}}" role="button">Get Started</a>
+  </div>
+  </div>
+</div>
+</div>
+{% endblock %}

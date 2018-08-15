@@ -1,0 +1,33 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}
+Choose a displayname
+{% endblock %}
+{% block content %}
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <div class="jumbotron">
+          <h1>Welcome to Crack Messaging!</h1>
+          <p class="lead"> Slack's addictive little brother</p>
+          <hr class="my-4">
+          <p> We see you're new, just pick a display name to get started </p>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <form method="post" action="{{url_for('index')}}">
+        {{form.csrf_token}}
+        {{wtf.form_field(form.displayname)}}
+        <ul>
+          {% for error in form.displayname.errors %}
+          <li style="color:red"> {{error}}</li>
+          {% endfor %}
+        </ul>
+        <input type="submit" value="Submit" class="btn btn-primary">
+      </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
