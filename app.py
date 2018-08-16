@@ -5,8 +5,10 @@ from wtforms import StringField
 from wtforms.validators import DataRequired, NoneOf
 from flask_socketio import SocketIO, emit
 import os
+import sys
 from random import seed,randint
 from collections import deque
+import json
 seed(1)
 app=Flask(__name__)
 app.secret_key=os.urandom(25)
@@ -23,7 +25,7 @@ class Channel:
     def __init__(self,username,name):
         self.chatters=[username]
         self.name=name
-        self.chathistory=deque(100)
+        self.chathistory=deque([],maxlen=100)
         while True:
             id=randint(0,1000000000000)
             if id not in channels:
@@ -53,12 +55,12 @@ def newchannel():
     return render_template('createchannel.html',form=form)
 @app.route("/channel/<int:channelid>")
 def displaychannel(channelid):
-    return render_template('displaychannel.html',channelid=channelid)
-@socketio.on('sendmessage')
+    return render_template('displaychannel.html',channelid=json.dumps(channelid))
+
+@socketio.on('messagesend')
 def messagerelay(data):
-    newmessage=data['text']
-    channels[data['channelid']].chathistory.append(newmessage)
-    emit("message relay",{'chathistory':list(channels[data['channelid']].chathistory)})
+    msgtext=data['text']
+    emit('message relay',{'text':msgtext},broadcast=True)
 
 if __name__ == '__main__':
     socketio.run(app)
